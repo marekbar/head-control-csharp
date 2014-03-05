@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeadControl", "HeadControl\HeadControl.csproj", "{B39DF29C-54CA-4600-8548-BF57FF842FAF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeadControlLibrary", "HeadControlLibrary\HeadControlLibrary.csproj", "{C579501E-42C6-4B7D-A968-62BFE262F580}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{B39DF29C-54CA-4600-8548-BF57FF842FAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B39DF29C-54CA-4600-8548-BF57FF842FAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B39DF29C-54CA-4600-8548-BF57FF842FAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C579501E-42C6-4B7D-A968-62BFE262F580}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C579501E-42C6-4B7D-A968-62BFE262F580}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C579501E-42C6-4B7D-A968-62BFE262F580}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C579501E-42C6-4B7D-A968-62BFE262F580}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

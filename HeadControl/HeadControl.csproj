@@ -33,82 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Accord, Version=2.12.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Accord.NET\Framework\Samples\Imaging\Classification (BoW)\bin\x86\Release\Accord.dll</HintPath>
-    </Reference>
-    <Reference Include="Accord.Controls.Imaging, Version=2.12.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Accord.NET\Framework\Release\Accord.Controls.Imaging.dll</HintPath>
-    </Reference>
-    <Reference Include="Accord.Controls.Vision, Version=2.12.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Accord.NET\Framework\Release\Accord.Controls.Vision.dll</HintPath>
-    </Reference>
-    <Reference Include="Accord.DirectSound, Version=2.12.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Accord.NET\Framework\Release\Accord.DirectSound.dll</HintPath>
-    </Reference>
-    <Reference Include="Accord.Imaging, Version=2.12.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Accord.NET\Framework\Release\Accord.Imaging.dll</HintPath>
-    </Reference>
-    <Reference Include="Accord.MachineLearning, Version=2.12.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Accord.NET\Framework\Release\Accord.MachineLearning.dll</HintPath>
-    </Reference>
-    <Reference Include="Accord.MachineLearning.GPL, Version=2.12.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Accord.NET\Framework\Release\Accord.MachineLearning.GPL.dll</HintPath>
-    </Reference>
-    <Reference Include="Accord.Math, Version=2.12.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Accord.NET\Framework\Release\Accord.Math.dll</HintPath>
-    </Reference>
-    <Reference Include="Accord.Neuro, Version=2.12.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Accord.NET\Framework\Release\Accord.Neuro.dll</HintPath>
-    </Reference>
-    <Reference Include="Accord.Statistics, Version=2.12.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Accord.NET\Framework\Release\Accord.Statistics.dll</HintPath>
-    </Reference>
-    <Reference Include="Accord.Vision, Version=2.12.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Accord.NET\Framework\Release\Accord.Vision.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge, Version=2.2.5.0, Culture=neutral, PublicKeyToken=c1db6ff4eaa06aeb, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\AForge.NET\Framework\Release\AForge.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Controls, Version=2.2.5.0, Culture=neutral, PublicKeyToken=a8ac264d1dc6b9d9, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\AForge.NET\Framework\Release\AForge.Controls.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Imaging, Version=2.2.5.0, Culture=neutral, PublicKeyToken=ba8ddea9676ca48b, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\AForge.NET\Framework\Release\AForge.Imaging.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Imaging.Formats, Version=2.2.4.0, Culture=neutral, PublicKeyToken=8065ed5a639199a0, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\AForge.NET\Framework\Release\AForge.Imaging.Formats.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Video, Version=2.2.5.0, Culture=neutral, PublicKeyToken=cbfb6e07d173c401, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\AForge.NET\Framework\Release\AForge.Video.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Video.DirectShow, Version=2.2.5.0, Culture=neutral, PublicKeyToken=61ea4348d43881b7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\AForge.NET\Framework\Release\AForge.Video.DirectShow.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Video.FFMPEG, Version=2.2.5.0, Culture=neutral, PublicKeyToken=03563089b1be05dd, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\AForge.NET\Framework\Release\AForge.Video.FFMPEG.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Vision, Version=2.2.5.0, Culture=neutral, PublicKeyToken=b612fa915eefaa06, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\AForge.NET\Framework\Release\AForge.Vision.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -126,8 +50,6 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="HeadControl.cs" />
-    <Compile Include="HeadControlExtensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -156,6 +78,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="haarcascade_frontalface_default.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HeadControlLibrary\HeadControlLibrary.csproj">
+      <Project>{c579501e-42c6-4b7d-a968-62bfe262f580}</Project>
+      <Name>HeadControlLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

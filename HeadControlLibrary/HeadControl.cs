@@ -11,70 +11,6 @@ using System.Drawing.Imaging;
 
 namespace HeadControl
 {
-    public enum Direction
-    {
-        MoveLeft = 1,
-        MoveRight = 2,
-        MoveUp = 3,
-        MoveDown = 4
-    }
-
-    public class Position
-    {
-        public Position(int x, int y)
-        {
-            X = x; Y = y;
-        }
-        public int X { get; set; }
-        public int Y { get; set; }
-    }
-
-    public class HeadMoveEventArgs : EventArgs
-    {
-        public Direction MoveDirection { get; set; }
-        public Position CurrentPosition { get; set; }
-
-        public HeadMoveEventArgs(Direction direction, Position position)
-        {
-            this.MoveDirection = direction;
-            this.CurrentPosition = position;
-        }
-    }
-
-    public class HeadMoveDirectionEventArgs : EventArgs
-    {
-        public bool HasMoved { get; set; }
-
-        public HeadMoveDirectionEventArgs(bool hasMoved)
-        {
-            HasMoved = hasMoved;
-        }
-    }
-
-    public class FrameProviderArgs : EventArgs
-    {
-        public Bitmap Frame{get;set;}
-
-        public FrameProviderArgs(Bitmap bmp)
-        {
-            Frame = bmp;
-        }
-    }
-
-    public class HeadControlErrorArgs : EventArgs
-    {
-        public String ErrorMessage { get; set; }
-        public HeadControlErrorArgs(Exception ex)
-        {
-            ErrorMessage = ex.GetError();
-        }
-
-        public HeadControlErrorArgs(String error)
-        {
-            ErrorMessage = error;
-        }
-    }
-
     public class HeadControl
     {
         #region DELEATES
@@ -238,7 +174,7 @@ namespace HeadControl
             //    25, Accord.Vision.Detection.ObjectDetectorSearchMode.Average, 0.2f,
             //    Accord.Vision.Detection.ObjectDetectorScalingMode.SmallerToGreater);
 
-            detector = new HaarObjectDetector(HaarCascade.FromXml(new StringReader(Properties.Resources.haarcascade_frontalface_default)));
+            detector = new HaarObjectDetector(HaarCascade.FromXml(new StringReader(HeadControlLibrary.Properties.Resources.haarcascade_frontalface_default)));
             detector.MinSize = new Size(20, 20);
             detector.ScalingFactor = 1.2f;
             detector.ScalingMode = ObjectDetectorScalingMode.SmallerToGreater;
