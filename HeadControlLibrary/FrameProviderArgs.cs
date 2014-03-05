@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 
-namespace HeadControl
+namespace HeadControlLibrary
 {
     public class FrameProviderArgs : EventArgs
     {

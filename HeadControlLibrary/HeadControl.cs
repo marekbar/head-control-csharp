@@ -9,7 +9,7 @@ using Accord.Vision.Detection;
 using System.IO;
 using System.Drawing.Imaging;
 
-namespace HeadControl
+namespace HeadControlLibrary
 {
     public class HeadControl
     {
@@ -168,12 +168,6 @@ namespace HeadControl
             video.NewFrame += new NewFrameEventHandler(processFrame);
             video.VideoSourceError += new VideoSourceErrorEventHandler(processFrameError);
 
-            //Accord.Vision.Detection.HaarCascade classifier = Accord.Vision.Detection.HaarCascade.FromXml(
-            //new System.IO.StringReader(Properties.Resources.haarcascade_frontalface_default));
-            //detector = new Accord.Vision.Detection.HaarObjectDetector(classifier,
-            //    25, Accord.Vision.Detection.ObjectDetectorSearchMode.Average, 0.2f,
-            //    Accord.Vision.Detection.ObjectDetectorScalingMode.SmallerToGreater);
-
             detector = new HaarObjectDetector(HaarCascade.FromXml(new StringReader(HeadControlLibrary.Properties.Resources.haarcascade_frontalface_default)));
             detector.MinSize = new Size(20, 20);
             detector.ScalingFactor = 1.2f;
@@ -246,8 +240,8 @@ namespace HeadControl
             try
             {
                 UpdateFrame(bmp);
-                //if (detecting)
-                //{
+                if (detecting)
+                {
                     var ui = new AForge.Imaging.UnmanagedImage(data);
                     resizeBic.NewWidth = (int)ui.Width / 2;
                     resizeBic.NewHeight = (int)ui.Height / 2;
@@ -265,13 +259,15 @@ namespace HeadControl
                     if (detector.DetectedObjects.Length > 0)
                     {
                         rect = detector.DetectedObjects;
-                        //tracker.SearchWindow = rect[0];
-                        //tracker.AspectRatio = 1.2f;
-                        //tracker.Mode = Accord.Vision.Tracking.CamshiftMode.HSL;
-                        //marker.Rectangles = rect;
-                        //bmp = marker.Apply(bmp);
-                        //detecting = false;
-                        //tracking = true;
+                        tracker.SearchWindow = rect[0];
+                        tracker.AspectRatio = 1.2f;
+                        tracker.Mode = Accord.Vision.Tracking.CamshiftMode.HSL;
+                        
+                        marker.Rectangles = rect;
+                        marker.ApplyInPlace(ui);
+
+                        detecting = false;
+                        tracking = true;
                         for (int i = 0; i < rect.Length; i++)
                         {
                             if (rect[i].Width > rect[0].Width) rect[0] = rect[i];
@@ -282,27 +278,28 @@ namespace HeadControl
                         current.Y = rect[0].Y;
                     }//check number of detected objects
 
-                //}
+                }
 
-                //if (tracking)
-                //{
-                //    detectEveryXFrames++;
-                //    if (detectEveryXFrames > 300)
-                //    {
-                //        detectEveryXFrames = 0;
-                //        detecting = true;
-                //        tracking = false;
-                //    }
-                //    rect[0] = tracker.TrackingObject.Rectangle;
+                if (tracking)
+                {
+                    var ui = new AForge.Imaging.UnmanagedImage(data);
+                    detectEveryXFrames++;
+                    if (detectEveryXFrames > 300)
+                    {
+                        detectEveryXFrames = 0;
+                        detecting = true;
+                        tracking = false;
+                    }
+                    rect[0] = tracker.TrackingObject.Rectangle;
 
-                //    marker.Rectangles = rect;
-                //    //if (rect.Length > 0)
-                //    //    bmp = marker.Apply(bmp);
-                //    previous.X = current.X;
-                //    previous.Y = current.Y;
-                //    current.X = tracker.TrackingObject.Rectangle.X;
-                //    current.Y = tracker.TrackingObject.Rectangle.Y;
-                //}
+                    marker.Rectangles = rect;
+                    if (rect.Length > 0)
+                    marker.ApplyInPlace(ui);
+                    previous.X = current.X;
+                    previous.Y = current.Y;
+                    current.X = tracker.TrackingObject.Rectangle.X;
+                    current.Y = tracker.TrackingObject.Rectangle.Y;
+                }
 
                 Direction d = Direction.MoveDown;
                 ///warning - in camera is mirrored image of your face 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace HeadControl
+namespace HeadControlSampleApp
 {
     static class Program
     {

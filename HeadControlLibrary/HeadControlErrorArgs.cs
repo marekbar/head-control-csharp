@@ -1,6 +1,6 @@
 using System;
 
-namespace HeadControl
+namespace HeadControlLibrary
 {
     public class HeadControlErrorArgs : EventArgs
     {

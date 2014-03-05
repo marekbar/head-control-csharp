@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using HeadControlLibrary;
 
-namespace HeadControl
+namespace HeadControlSampleApp
 {
     public partial class Form1 : Form
     {
-        private HeadControl hc = null;
+        private HeadControlLibrary.HeadControl hc = null;
         delegate void SetTextCallback(string text);
         delegate void SetImageCallback(Bitmap bmp);
         delegate void SetCursorPositionCallback(Direction dir);
@@ -22,12 +18,14 @@ namespace HeadControl
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            hc = new HeadControl("http://192.168.1.218:80/videostream.cgi", "admin", "123456");
-            hc.OnHeadMove += new HeadControl.HeadMove(HeadMoveEvent);
-            hc.OnHeadMoveDown += new HeadControl.HeadMoveDirection(HeadMoveDownEvent);
-            hc.OnHeadMoveUp += new HeadControl.HeadMoveDirection(HeadMoveUpEvent);
-            hc.OnHeadMoveLeft += new HeadControl.HeadMoveDirection(HeadMoveLeftEvent);
-            hc.OnHeadMoveRight += new HeadControl.HeadMoveDirection(HeadMoveRightEvent);
+            hc = new HeadControlLibrary.HeadControl(Properties.Settings.Default.CameraAddress, 
+                                Properties.Settings.Default.CameraLogin,
+                                Properties.Settings.Default.CameraPassword);
+            hc.OnHeadMove += new HeadControlLibrary.HeadControl.HeadMove(HeadMoveEvent);
+            hc.OnHeadMoveDown += new HeadControlLibrary.HeadControl.HeadMoveDirection(HeadMoveDownEvent);
+            hc.OnHeadMoveUp += new HeadControlLibrary.HeadControl.HeadMoveDirection(HeadMoveUpEvent);
+            hc.OnHeadMoveLeft += new HeadControlLibrary.HeadControl.HeadMoveDirection(HeadMoveLeftEvent);
+            hc.OnHeadMoveRight += new HeadControlLibrary.HeadControl.HeadMoveDirection(HeadMoveRightEvent);
             hc.OnFrameReceived += (s, args) =>
             {
                 setImage((Bitmap)args.Frame.Clone());
@@ -42,27 +40,35 @@ namespace HeadControl
 
         private void SetText(string text)
         {
-            if (this.status.GetCurrentParent().InvokeRequired)
+            try
             {
-                this.status.GetCurrentParent().Invoke(new MethodInvoker(delegate { status.Text = text; }));
+                if (this.status.GetCurrentParent().InvokeRequired)
+                {
+                    this.status.GetCurrentParent().Invoke(new MethodInvoker(delegate { status.Text = text; }));
+                }
+                else
+                {
+                    status.Text = text;
+                }
             }
-            else
-            {
-                status.Text = text;
-            }
+            catch { }
         }
 
         private void setImage(Bitmap bmp)
         {
-            if (this.image.InvokeRequired)
+            try
             {
-                SetImageCallback sic = new SetImageCallback(setImage);
-                this.Invoke(sic, new object[] { bmp });
+                if (this.image.InvokeRequired)
+                {
+                    SetImageCallback sic = new SetImageCallback(setImage);
+                    this.Invoke(sic, new object[] { bmp });
+                }
+                else
+                {
+                    this.image.Image = bmp;
+                }
             }
-            else
-            {
-                this.image.Image = bmp;
-            }
+            catch { }
         }
 
         private static int sensivity = 5;

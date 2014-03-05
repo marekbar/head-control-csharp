@@ -1,4 +1,4 @@
-namespace HeadControl
+namespace HeadControlLibrary
 {
     public enum Direction
     {

@@ -1,4 +1,4 @@
-﻿namespace HeadControl
+﻿namespace HeadControlSampleApp
 {
     partial class Form1
     {
