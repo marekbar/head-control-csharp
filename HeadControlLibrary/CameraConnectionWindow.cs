@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using AForge.Video.DirectShow;
 using System.Net;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using AForge.Video;
 
 namespace HeadControlLibrary

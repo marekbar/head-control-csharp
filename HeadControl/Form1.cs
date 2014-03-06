@@ -71,7 +71,7 @@ namespace HeadControlSampleApp
             catch { }
         }
 
-        private static int sensivity = 5;
+        private static int sensivity = 50;
         private void MoveCursor(Direction dir)
         {
             if (this.InvokeRequired)

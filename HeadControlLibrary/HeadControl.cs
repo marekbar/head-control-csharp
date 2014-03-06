@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AForge.Video;
-using AForge.Video.DirectShow;
 using System.Drawing;
-using Accord.Vision.Detection;
 using System.IO;
-using System.Drawing.Imaging;
+using Accord.Vision.Detection;
+using AForge.Video;
 
 namespace HeadControlLibrary
 {
@@ -142,21 +137,32 @@ namespace HeadControlLibrary
 
         #region FIELDS
 
-        private bool detecting = true;
+        private bool detecting = false;
         private bool tracking = false;
-        private int detectEveryXFrames;
+        private float scaleX;
+        private float scaleY;
+        private static int processWidth = 160;
+        private static int processHeight = 120;
         private Accord.Vision.Detection.HaarObjectDetector detector = null;
         private Accord.Vision.Tracking.Camshift tracker = null;
         private Accord.Imaging.Filters.RectanglesMarker marker = new Accord.Imaging.Filters.RectanglesMarker(Color.Fuchsia);
         private MJPEGStream video = null;
-        private Rectangle[] rect;
         private Bitmap bmp = null;
         private String cameraUrl;
         private String cameraLogin;
         private String cameraPassword;
-        private Position current = new Position(0, 0);
-        private Position previous = new Position(0, 0);
-        private AForge.Imaging.Filters.ResizeBicubic resizeBic = new AForge.Imaging.Filters.ResizeBicubic(100, 100);
+        private Rectangle previous;
+        private Rectangle current;
+
+        public Rectangle Current
+        {
+            get { return current; }
+            set 
+            {
+                previous = current;
+                current = value;
+            }
+        }
         #endregion
 
         #region CONSTRUCTORS
@@ -165,15 +171,16 @@ namespace HeadControlLibrary
             video = new MJPEGStream(this.cameraUrl);
             video.Login = this.cameraLogin;
             video.Password = this.cameraPassword;
-            video.NewFrame += new NewFrameEventHandler(processFrame);
+            video.NewFrame += new NewFrameEventHandler(processFrameQuickly);
             video.VideoSourceError += new VideoSourceErrorEventHandler(processFrameError);
-
-            detector = new HaarObjectDetector(HaarCascade.FromXml(new StringReader(HeadControlLibrary.Properties.Resources.haarcascade_frontalface_default)));
-            detector.MinSize = new Size(20, 20);
+            
+            detector = new HaarObjectDetector(
+                HaarCascade.FromXml(new StringReader(
+                    HeadControlLibrary.Properties.Resources.haarcascade_frontalface_default)));
+            detector.MinSize = new Size(10, 10);
             detector.ScalingFactor = 1.2f;
             detector.ScalingMode = ObjectDetectorScalingMode.SmallerToGreater;
-            detector.SearchMode = ObjectDetectorSearchMode.Default;
-            detector.UseParallelProcessing = true;
+            detector.SearchMode = ObjectDetectorSearchMode.Single;  
         }
 
         public HeadControl(String url)
@@ -225,7 +232,7 @@ namespace HeadControlLibrary
             }
             finally
             {
-                detecting = true;
+                detecting = false;
                 tracking = false;
             }
         }
@@ -233,82 +240,59 @@ namespace HeadControlLibrary
         #endregion
 
         #region PROCESSING
-        private void processFrame(object sender, NewFrameEventArgs args)
+        private void processFrameQuickly(object sender, NewFrameEventArgs args)
         {
+            if (!detecting && !tracking) { return; }
+
             bmp = args.Frame.Clone() as Bitmap;
-            var data = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadWrite, bmp.PixelFormat);
+            var data = bmp.GetDirectAccess();
             try
             {
-                UpdateFrame(bmp);
+                scaleX = bmp.Width / processWidth;
+                scaleY = bmp.Height / processHeight;
+                var im = data.GetUnmanaged();
                 if (detecting)
                 {
-                    var ui = new AForge.Imaging.UnmanagedImage(data);
-                    resizeBic.NewWidth = (int)ui.Width / 2;
-                    resizeBic.NewHeight = (int)ui.Height / 2;
+                    detecting = false;
+                    tracking = false;
 
+                    var downsample = im.ResizeTo(processWidth, processHeight);
+                    var detections = detector.ProcessFrame(downsample);
 
-                    try
+                    if (detections.Length > 0)
                     {
-                        detector.ProcessFrame(resizeBic.Apply(ui));
-                    }
-                    catch(Exception ee)
-                    {
-                        throw new Exception("Problem z detektorem Viola-Jones", ee);
-                    }
-             
-                    if (detector.DetectedObjects.Length > 0)
-                    {
-                        rect = detector.DetectedObjects;
-                        tracker.SearchWindow = rect[0];
-                        tracker.AspectRatio = 1.2f;
-                        tracker.Mode = Accord.Vision.Tracking.CamshiftMode.HSL;
-                        
-                        marker.Rectangles = rect;
-                        marker.ApplyInPlace(ui);
+                        tracker.Reset();
+                        var face = detections.First();
+                        var window = face.AvoidBackgroundTracking(scaleX, scaleY);
+                        window.Inflate((int)(0.2f * face.Width * scaleX),(int)(0.4f * face.Height * scaleY));
 
-                        detecting = false;
+                        tracker.SearchWindow = window;
+                        tracker.ProcessFrame(im);
+
+                        marker.Set(ref im, window);
+
                         tracking = true;
-                        for (int i = 0; i < rect.Length; i++)
-                        {
-                            if (rect[i].Width > rect[0].Width) rect[0] = rect[i];
-                        }
-                        previous.X = current.X;
-                        previous.Y = current.Y;
-                        current.X = rect[0].X;
-                        current.Y = rect[0].Y;
-                    }//check number of detected objects
-
-                }
-
-                if (tracking)
-                {
-                    var ui = new AForge.Imaging.UnmanagedImage(data);
-                    detectEveryXFrames++;
-                    if (detectEveryXFrames > 300)
-                    {
-                        detectEveryXFrames = 0;
-                        detecting = true;
-                        tracking = false;
+                        Current = window;
                     }
-                    rect[0] = tracker.TrackingObject.Rectangle;
-
-                    marker.Rectangles = rect;
-                    if (rect.Length > 0)
-                    marker.ApplyInPlace(ui);
-                    previous.X = current.X;
-                    previous.Y = current.Y;
-                    current.X = tracker.TrackingObject.Rectangle.X;
-                    current.Y = tracker.TrackingObject.Rectangle.Y;
+                    else
+                    {
+                        detecting = true;
+                    }
                 }
-
-                Direction d = Direction.MoveDown;
-                ///warning - in camera is mirrored image of your face 
-                if (current.X > previous.X) d = Direction.MoveLeft;
-                else if (current.X < previous.X) d = Direction.MoveRight;
-                else if (current.Y < previous.Y) d = Direction.MoveDown;
-                else if (current.Y > previous.Y) d = Direction.MoveUp;
-
-                UpdateHeadMove(d, new Position(1, 1));
+                else if (tracking)
+                {
+                    tracker.ProcessFrame(im);
+                    im.DrawHorizontalAxis(ref tracker);
+                    marker.Set(ref im, tracker.TrackingObject.Rectangle);
+                    Current = tracker.TrackingObject.Rectangle;
+                }
+                else
+                {
+                    marker.ApplyInPlace(im);
+                    previous = current;
+                }
+                
+                UpdateHeadMove(GetDirection(), current.Current());
             }
             catch (Exception ex)
             {
@@ -317,7 +301,25 @@ namespace HeadControlLibrary
             finally
             {
                 bmp.UnlockBits(data);
+                UpdateFrame(bmp);
             }
+        }
+
+        private Direction GetDirection()
+        {
+            Direction d = Direction.NoMove;
+
+            ///warning - in camera is mirrored image of your face 
+            if (current.X + 5 > previous.X) d = Direction.MoveLeft;
+            else if (current.X + 5 < previous.X) d = Direction.MoveRight;
+
+            else if (current.Height < previous.Height) d = Direction.MoveDown;
+            else if (current.Height > previous.Height) d = Direction.MoveUp;
+            //else if (current.Y < previous.Y) d = Direction.MoveDown;
+            //else if (current.Y > previous.Y) d = Direction.MoveUp;
+            else d = Direction.NoMove;
+
+            return d;
         }
 
         private void processFrameError(object sender, VideoSourceErrorEventArgs args)
